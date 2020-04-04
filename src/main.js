@@ -9,6 +9,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './bus'
 
+
 Vue.use(ElementUI)
 Vue.prototype.$dayjs = dayjs
 Vue.config.productionTip = false

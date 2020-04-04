@@ -1,42 +1,37 @@
 <template>
   <div>
-    <el-button type="primary" @click="send">按钮</el-button>
-    <child-one></child-one>
-    <child-two></child-two>
+    <div v-for="(item, index) in menus" :key="index">{{item.authName}}</div>
   </div>
 </template>
 
 <script>
-import childOne from '../components/Child1'
-import childTwo from '../components/Child2'
+import { createNamespacedHelpers } from "vuex";
+// 传模块的名字
+const homeModule = createNamespacedHelpers("home");
+const {
+  mapState: homeState,
+  mapMutations: homeMutations,
+  mapActions: homeActions
+} = homeModule;
 export default {
-  name: '',
-  props: {
-  },
-  components: {
-    childOne,
-    childTwo
-  },
+  name: "",
+  props: {},
+  components: {},
   data() {
-    return {
-      msg: '我是home组件的数据'
-    }
+    return {};
   },
   methods: {
-    send() {
-      this.$bus.$emit('send', this.msg)
-    }
+    ...homeActions(["getMenus"])
   },
   mounted() {
-
+    this.getMenus();
+  //  console.log( ); 
   },
-  watch: {
-
-  },
+  watch: {},
   computed: {
-
+    ...homeState(["menus"])
   }
-}
+};
 </script>
 
 <style scoped lang='scss'>

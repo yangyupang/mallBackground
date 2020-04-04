@@ -42,3 +42,15 @@
 .t-center {
     text-align: center;
 }
+
+.el-form--label-left {
+    .el-form-item__label {
+        text-align: left;
+    }
+}
+
+.login__form__item {
+    .el-form-item__content {
+        margin-left: 0!important;
+    }
+}
