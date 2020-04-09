@@ -13,7 +13,7 @@ const isProduction = process.env.NODE_ENV === "production"
 const service = axios.create()
 
 // 接口基础路径
-service.defaults.baseURL = isProduction ? "http://49.233.66.125:8888/api/private/v1/" : "/api"
+// service.defaults.baseURL = isProduction ? "http://49.233.66.125:8888/api/private/v1/" : "/api"
 
 // 超时时间
 service.defaults.timeout = 10000

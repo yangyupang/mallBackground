@@ -10,7 +10,7 @@ export default {
         username,
         password
     }) {
-        return service.post('login', {
+        return service.post('/apis/login', {
             username,
             password
         })
@@ -22,12 +22,8 @@ export default {
      * @param {*} pagesize 每⻚页显示条数
      * @param {*} query 查询参数 可选
      */
-    getUserList({
-        pagenum = 1,
-        pagesize = 5,
-        query
-    }) {
-        return service.get(`users?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
+    getUserList(pagenum = 1, pagesize = 5, query) {
+        return service.get(`/apis/users?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
     },
     /**
      * post 添加⽤用户
@@ -42,7 +38,7 @@ export default {
         email,
         mobile
     }) {
-        return service.post(`users`, {
+        return service.post(`/apis/users`, {
             username,
             password,
             email,
@@ -58,14 +54,14 @@ export default {
         uId,
         type
     }) {
-        return service.put(`users/${uId}/state/${type}`)
+        return service.put(`/apis/users/${uId}/state/${type}`)
     },
     /**
      * get 根据ID查询⽤用户信息
      * @param {*} uId ⽤用户ID
      */
     getUserInfo(uId) {
-        return service.get(`users/${uId}`)
+        return service.get(`/apis/users/${uId}`)
     },
     /**
      * put 编辑⽤用户提交
@@ -78,7 +74,7 @@ export default {
         email,
         mobile
     }) {
-        return service.put(`users/${uId}`, {
+        return service.put(`/apis/users/${uId}`, {
             email,
             mobile
         })
@@ -88,7 +84,7 @@ export default {
      * @param {*} uId ⽤用户 id
      */
     delUser(uId) {
-        return service.delete(`users/${uId}`)
+        return service.delete(`/apis/users/${uId}`)
     },
     /**
      * put 分配⽤用户⻆角⾊色
@@ -99,7 +95,7 @@ export default {
         uId,
         rid
     }) {
-        return service.put(`users/${uId}/role`, {
+        return service.put(`/apis/users/${uId}/role`, {
             rid
         })
     },
@@ -109,15 +105,15 @@ export default {
      * @param {*} type 类型 list 或 tree
      */
     getRightsList(type) {
-        return service.get(`rights/${type}`)
+        return service.get(`/apis/rights/${type}`)
     },
     // 左侧菜单权限
     getMenus() {
-        return service.get('menus')
+        return service.get('/apis/menus')
     },
     //角色列表
     getRoleList() {
-        return service.get('roles')
+        return service.get('/apis/roles')
     },
     /**
      * post 添加⻆角⾊色
@@ -128,7 +124,7 @@ export default {
         roleName,
         roleDesc
     }) {
-        return service.post('roles', {
+        return service.post('/apis/roles', {
             roleName,
             roleDesc
         })
@@ -138,7 +134,7 @@ export default {
      * @param {*} rid ⻆角⾊色 ID
      */
     getRole(rid) {
-        return service.get(`roles/${rid}`)
+        return service.get(`/apis/roles/${rid}`)
     },
     /**
      * put 编辑提交⻆角⾊色
@@ -151,7 +147,7 @@ export default {
         roleName,
         roleDesc
     }) {
-        return service.put(`roles/${rid}`, {
+        return service.put(`/apis/roles/${rid}`, {
             roleName,
             roleDesc
         })
@@ -161,7 +157,7 @@ export default {
      * @param {*} rid
      */
     delRole(rid) {
-        return service.delete(`roles/${rid}`)
+        return service.delete(`/apis/roles/${rid}`)
     },
     /**
      * post ⻆角⾊色授权
@@ -172,7 +168,7 @@ export default {
         roleId,
         rids
     }) {
-        return service.post(`roles/${roleId}/rights`, {
+        return service.post(`/apis/roles/${roleId}/rights`, {
             rids
         })
     },
@@ -185,7 +181,7 @@ export default {
         roleId,
         rightId
     }) {
-        return service.delete(`roles/${roleId}/rights/${rightId}`)
+        return service.delete(`/apis/roles/${roleId}/rights/${rightId}`)
     },
     //商品分类
     /**
@@ -199,7 +195,7 @@ export default {
         pagenum = 1,
         pagesize = 5
     }) {
-        return service.get(`cacategories?type=${type}&pagenum=${pagenum}&pagesize=${pagesize}`)
+        return service.get(`/apis/categories?type=${type}&pagenum=${pagenum}&pagesize=${pagesize}`)
     },
     //添加分类
     // cat_pid	分类父 ID	不能为空，如果要添加1级分类，则父分类Id应该设置为 0
@@ -210,7 +206,7 @@ export default {
         cat_name,
         cat_level
     }) {
-        return service.post(`categories`, {
+        return service.post(`/apis/categories`, {
             cat_pid,
             cat_name,
             cat_level
@@ -218,15 +214,15 @@ export default {
     },
     // 根据 id 查询分类
     getCategoriesById(id) {
-        return service.get(`categories/${id}`)
+        return service.get(`/apis/categories/${id}`)
     },
     /**
      * put 编辑提交分类
      * @param {*} id 分类 ID
      * @param {*} cat_name 分类名称
      */
-    editCategories(id, cat_name) {
-        return service.put(`categories/${id}`, {
+    editCategories({ id, cat_name }) {
+        return service.put(`/apis/categories/${id}`, {
             cat_name
         });
     },
@@ -235,7 +231,7 @@ export default {
      * @param {*} id 分类 ID
      */
     delCategories(id) {
-        return service.delete(`categories/${id}`);
+        return service.delete(`/apis/categories/${id}`);
     },
     //分类参数管理理
     /**
@@ -243,11 +239,8 @@ export default {
      * @param {*} id 分类 ID
      * @param {*} sel [only,many]
      */
-    getAttributes({
-        id,
-        sel
-    }) {
-        return service.get(`categories/${id}/attributes?sel=${sel}`);
+    getAttributes(id, sel) {
+        return service.get(`/apis/categories/${id}/attributes?sel=${sel}`);
     },
     /**
      * post 添加动态参数或者静态属性
@@ -262,7 +255,7 @@ export default {
         attr_sel,
         attr_vals
     }) {
-        return service.post(`categories/${id}/attributes`, {
+        return service.post(`/apis/categories/${id}/attributes`, {
             attr_name,
             attr_sel,
             attr_vals
@@ -277,7 +270,7 @@ export default {
         id,
         attrid
     }) {
-        return service.delete(`categories/${id}/attributes/${attrid}`);
+        return service.delete(`/apis/categories/${id}/attributes/${attrid}`);
     },
     /**
      * get 根据 ID 查询参数
@@ -286,14 +279,9 @@ export default {
      * @param {*} attr_sel [only,many]
      * @param {*} attr_vals 如果是 many 就需要填写值的选项，以逗号分隔 可选
      */
-    findAttributes({
-        id,
-        attrid,
-        attr_sel,
-        attr_vals
-    }) {
+    findAttributes(id, attrid, attr_sel, attr_vals) {
         return service.get(
-            `categories/${id}/attributes/${attrid}?attr_sel=${attr_sel}&attr_vals=${attr_vals}`
+            `/apis/categories/${id}/attributes/${attrid}?attr_sel=${attr_sel}&attr_vals=${attr_vals}`
         );
     },
     /**
@@ -311,7 +299,7 @@ export default {
         attr_sel,
         attr_vals
     }) {
-        return service.put(`categories/${id}/attributes/${attrid}`, {
+        return service.put(`/apis/categories/${id}/attributes/${attrid}`, {
             attr_name,
             attr_sel,
             attr_vals
@@ -324,13 +312,9 @@ export default {
      * @param {*} pagesize 每⻚页显示条数
      * @param {*} query 查询参数 可选
      */
-    getGoods({
-        pagenum = 1,
-        pagesize = 5,
-        query
-    }) {
+    getGoods(pagenum = 1, pagesize = 5, query) {
         return service.get(
-            `goods?query=${query}&pagenum=${pagenum}&pagesize=${pagesize}`
+            `/apis/goods?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`
         );
     },
     /**
@@ -355,7 +339,7 @@ export default {
         pics,
         attrs
     }) {
-        return service.post(`goods`, {
+        return service.post(`/apis/goods`, {
             goods_name,
             goods_cat,
             goods_price,
@@ -371,7 +355,7 @@ export default {
      * @param {*} gid 商品 ID
      */
     findGood(gid) {
-        return service.get(`goods/${gid}`);
+        return service.get(`/apis/goods/${gid}`);
     },
     /**
      * put 编辑提交商品(只做效果,不不提交接⼝口)
@@ -394,7 +378,7 @@ export default {
         pics,
         attrs
     }) {
-        return service.put(`goods/${gid}`, {
+        return service.put(`/apis/goods/${gid}`, {
             goods_name,
             goods_price,
             goods_number,
@@ -409,7 +393,7 @@ export default {
      * @param {*} gid 商品 ID
      */
     delGood(gid) {
-        return service.delete(`goods/${gid}`);
+        return service.delete(`/apis/goods/${gid}`);
     },
     /**
      * put 同步商品图⽚片
@@ -420,7 +404,7 @@ export default {
         gid,
         pics
     }) {
-        return service.put(`goods/${gid}/pics`, {
+        return service.put(`/apis/goods/${gid}/pics`, {
             pics
         });
     },
@@ -429,7 +413,7 @@ export default {
      * @param {*} gid 商品 ID
      */
     syncGoodAttributes(gid) {
-        return service.put(`goods/${gid}/attributes`);
+        return service.put(`/apis/goods/${gid}/attributes`);
     },
     //图⽚片上传
     /**
@@ -439,7 +423,7 @@ export default {
     upload({
         file
     }) {
-        return service.post(`upload`, {
+        return service.post(`/apis/upload`, {
             file
         });
     },
@@ -457,19 +441,8 @@ export default {
      * @param {*} order_fapiao_content	发票内容	可以为空
      * @param {*} consignee_addr	发货地址	可以为空
      */
-    getOrders({
-        query,
-        agenum = 1,
-        pagesize = 5,
-        user_id,
-        pay_status,
-        is_send,
-        order_fapiao_title,
-        order_fapiao_company,
-        order_fapiao_content,
-        consignee_addr
-    }) {
-        return service.get(`orders?agenum=${agenum}&pagesize=${pagesize}&query=${query}&user_id=${user_id}&pay_status=${pay_status}&is_send=${is_send}&order_fapiao_title=${order_fapiao_title}&order_fapiao_company=${order_fapiao_company}&order_fapiao_content=${order_fapiao_content}&consignee_addr=${consignee_addr}`);
+    getOrders(query, agenum = 1, pagesize = 5, user_id, pay_status, is_send, order_fapiao_title, order_fapiao_company, order_fapiao_content, consignee_addr) {
+        return service.get(`/apis/orders?agenum=${agenum}&pagesize=${pagesize}&query=${query}&user_id=${user_id}&pay_status=${pay_status}&is_send=${is_send}&order_fapiao_title=${order_fapiao_title}&order_fapiao_company=${order_fapiao_company}&order_fapiao_content=${order_fapiao_content}&consignee_addr=${consignee_addr}`);
     },
     /**
      * put 修改订单状态
@@ -488,7 +461,7 @@ export default {
         order_number,
         pay_status
     }) {
-        return service.put(`orders/${oid}`, {
+        return service.put(`/apis/orders/${oid}`, {
             is_send,
             order_pay,
             order_price,
@@ -501,7 +474,7 @@ export default {
      * @param {*} oid 订单 ID
      */
     getOrdersState(oid) {
-        return service.get(`orders/${oid}`);
+        return service.get(`/apis/orders/${oid}`);
     },
     /**
      * get 查看物流信息
@@ -509,13 +482,17 @@ export default {
      * 供测试的物流单号：1106975712662 或者 804909574412544600
      */
     findExpress(oid) {
-        return service.get(`/kuaidi/${oid}`);
+        return service.get(`/apis/kuaidi/${oid}`);
     },
     //数据统计
     /**
      * get 基于时间统计的折线图
      */
     getChart() {
-        return service.get(`reports/type/1`);
+        return service.get(`/apis/reports/type/1`);
+    },
+    // 天气api
+    getWeather(city) {
+        return service.get(`map/api?version=v6&appid=56773599&appsecret=HVQliD8y&vue=1&city=${city}`)
     }
 }

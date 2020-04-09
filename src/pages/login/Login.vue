@@ -3,7 +3,7 @@
     <div class="form flex jc-center a-center">
       <el-card shadow="always">
         <div slot="header" class="t-center head-font">
-          <span>欢迎来到洋芋后台管理系统</span>
+          <span>欢迎来到芋胖后台管理系统</span>
         </div>
         <el-form
           ref="form"

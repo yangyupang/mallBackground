@@ -1,38 +1,28 @@
 <template>
-  <div>
-    <div v-for="(item, index) in menus" :key="index">{{item.authName}}</div>
+  <div class="t-center title-style">
+    <div>欢迎来到芋胖后台系统</div>
   </div>
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-// 传模块的名字
-const homeModule = createNamespacedHelpers("home");
-const {
-  mapState: homeState,
-  mapMutations: homeMutations,
-  mapActions: homeActions
-} = homeModule;
 export default {
-  name: "",
-  props: {},
-  components: {},
   data() {
     return {};
   },
-  methods: {
-    ...homeActions(["getMenus"])
-  },
-  mounted() {
-    this.getMenus();
-  //  console.log( ); 
-  },
+  components: {},
+  methods: {},
+  mounted() {},
   watch: {},
-  computed: {
-    ...homeState(["menus"])
-  }
+  computed: {},
+  filters: {}
 };
 </script>
 
 <style scoped lang='scss'>
+.title-style {
+  font-size: 24px;
+  font-weight: 700;
+  position: relative;
+  top: 20%;
+}
 </style>
