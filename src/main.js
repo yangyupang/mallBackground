@@ -9,7 +9,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './bus'
 import Router from 'vue-router'
+// import VCharts from 'v-charts'
 
+// Vue.use(VCharts)
 Vue.use(ElementUI)
 Vue.prototype.$dayjs = dayjs
 Vue.config.productionTip = false

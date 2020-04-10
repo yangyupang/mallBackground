@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import home from './home'
 import login from './login'
 import user from './user'
+import reports from './reports'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     modules: {
         home,
         login,
-        user
+        user,
+        reports
     }
 })

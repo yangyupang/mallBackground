@@ -66,7 +66,8 @@ export default {
       city: null,
       activeList: [],
       navList: [
-        { id: 0, authName: "首页", url: "/", icon: "el-icon-user" },
+        { id: 0, authName: "首页", url: "/" },
+        { id: null, url: "", icon: "el-icon-user" },
         { id: null, url: "", icon: "el-icon-folder-opened" },
         { id: null, url: "", icon: "el-icon-folder" },
         { id: null, url: "", icon: "el-icon-setting" },
