@@ -41,12 +41,9 @@
         :key="index"
         align="center"
       >
-        <!-- <template slot-scope="scope" v-if="item.label==='状态'">
-          <el-switch :v-model="scope.row[item.prop]" ></el-switch>
-        </template> -->
         <template slot-scope="scope">
           <span v-if="scope.row[item.prop]===true || scope.row[item.prop]===false">
-              <el-switch v-model="scope.row[item.prop]" ></el-switch>
+            <el-switch v-model="scope.row[item.prop]"></el-switch>
           </span>
           <span v-else>{{scope.row[item.prop]}}</span>
         </template>
@@ -57,20 +54,15 @@
           <span>操作</span>
         </template>
         <template slot-scope="scope">
-          <!-- <span v-if="tableIdx===scope.$index">
-            <el-button size="mini" @click="save(scope.$index, scope.row)">保存</el-button>
-            <el-button size="mini" type="danger" @click="cancel(scope.$index,scope.row)">取消</el-button>
-          </span>
-          <span v-else>
-            <el-button
-              style="margin-right:10px"
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
-            <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="del(scope.$index)">
-              <el-button size="mini" type="danger" slot="reference">删除</el-button>
-            </el-popconfirm>
-          </span>-->
+          <el-tooltip class="item" effect="dark" content="编译角色" placement="top">
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEdit"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除角色" placement="top">
+            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="分配角色" placement="top">
+            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -79,8 +71,8 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="page"
-        :page-sizes="pageSizeOpts"
-        :page-size="100"
+        :page-sizes="[5,15,20,30]"
+        :page-size="size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableDatass.length"
       ></el-pagination>
@@ -101,12 +93,9 @@ export default {
     };
     return {
       page: 1,
-      size: 10,
+      size: 5,
       search: "",
       tableDatass: [],
-      tableIdx: -1,
-      tableItem: {},
-      tableIdxs: -1,
       dialogFormVisible: false,
       ruleForm: {
         username: "",
@@ -168,32 +157,11 @@ export default {
   },
   methods: {
     // 每页条数切换的配置
-
     handleSizeChange(val) {
       this.size = val;
     },
     handleCurrentChange(val) {
       this.page = val;
-    },
-    del(index) {
-      this.tableDatass.splice(index, 1);
-    },
-    handleEdit(index, item) {
-      if (this.tableItem.length > 0) {
-        this.tableDatass.splice(this.tableIdxs, 1, JSON.parse(this.tableItem));
-      }
-      this.tableItem = JSON.stringify(item);
-      this.tableIdx = index;
-      this.tableIdxs = this.tableDatass.indexOf(item);
-    },
-    save(index, item) {
-      this.$emit("edit", item);
-      this.tableItem = JSON.stringify(item);
-      this.tableIdx = -1;
-    },
-    cancel(index, item) {
-      this.tableDatass.splice(this.tableIdxs, 1, JSON.parse(this.tableItem));
-      this.tableIdx = -1;
     },
     // 打开dialog
     showDialog() {
@@ -203,6 +171,7 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.$emit("add", this.ruleForm);
+          // this.dialogFormVisible = false;
         } else {
           console.log("error submit!!");
           return false;
@@ -237,27 +206,24 @@ export default {
         this.page * this.size
       );
     },
-    pageSizeOpts() {
-      let a = [];
-      let b = 50;
-      if (this.tableDatass.length < 50) {
-        b = this.tableDatass.length;
-      }
-      let i = 1;
-      do {
-        a.push(this.pageNum * i);
-        i++;
-      } while (i * this.pageNum <= b);
-      return a;
-    }
+    // pageSizeOpts() {
+    //   let a = [];
+    //   let b = 50;
+    //   if (this.tableDatass.length < 50) {
+    //     b = this.tableDatass.length;
+    //   }
+    //   let i = 1;
+    //   do {
+    //     a.push(this.pageNum * i);
+    //     i++;
+    //   } while (i * this.pageNum <= b);
+    //   return a;
+    // }
   }
 };
 </script>
 
 <style scoped lang='scss'>
-// ::v-deep .el-input__inner {
-//   width: 200px;
-// }
 .top {
   width: 100%;
   margin-bottom: 20px;

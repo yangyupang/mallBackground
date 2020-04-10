@@ -28,10 +28,6 @@ export default {
             try {
                 let res = await api.getMenus()
                 if (res.meta.status === 200) {
-                    // Message.success(res.meta.msg)
-                    // 如果组件需要用到action请求的结果 就返回出去  如果不用 就不返回
-                    // return res
-                    // console.log(res.data);
                     commit('setMenus', res.data)
                     return res.data
                 }

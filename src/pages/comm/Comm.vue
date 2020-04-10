@@ -136,10 +136,7 @@ export default {
       localStorage.removeItem("adminToken");
       localStorage.removeItem("activeList");
       this.$router.push("/login");
-      this.$notify({
-        title: "退出成功",
-        type: "success"
-      });
+      this.$message.success("退出成功")
     },
     getIcon(id) {
       let item = this.navList.find(item => item.id === id);

@@ -493,6 +493,6 @@ export default {
     },
     // 天气api
     getWeather(city) {
-        return service.get(`map/api?version=v6&appid=56773599&appsecret=HVQliD8y&vue=1&city=${city}`)
+        return service.get(`/map/api?version=v6&appid=56773599&appsecret=HVQliD8y&vue=1&city=${city}`)
     }
 }
