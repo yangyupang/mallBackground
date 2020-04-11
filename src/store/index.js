@@ -4,6 +4,7 @@ import home from './home'
 import login from './login'
 import user from './user'
 import reports from './reports'
+import rights from './rights'
 
 Vue.use(Vuex)
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
         home,
         login,
         user,
-        reports
+        reports,
+        rights
     }
 })

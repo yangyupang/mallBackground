@@ -252,8 +252,8 @@ export default {
     edit() {
       this.editUser({
         uId: this.editUsers.id,
-        email: this.editUsers.email,
-        mobile: this.editUsers.mobile
+        email: this.editUsers.email.trim(),
+        mobile: this.editUsers.mobile.trim()
       });
       this.editDialog = false;
       setTimeout(() => {
@@ -325,7 +325,7 @@ export default {
     },
     //搜索
     searchUsers(){
-      this.getUserList({ query: this.search, pagenum: 1, pagesize: this.size});
+      this.getUserList({ query: this.search.trim(), pagenum: 1, pagesize: this.size});
     }
   },
   beforeMount() {

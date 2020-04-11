@@ -161,27 +161,27 @@ export default {
     },
     /**
      * post ⻆角⾊色授权
-     * @param {*} rid ⻆角⾊色 ID
-     * @param {*} rids 权限 ID 列列表（字符串串） 以 , 分割
+     * @param {*} rid ⻆色 ID
+     * @param {*} rids 权限 ID 列表（字符串） 以 , 分割
      */
     roleAuthorization({
-        roleId,
+        rid,
         rids
     }) {
-        return service.post(`/apis/roles/${roleId}/rights`, {
+        return service.post(`/apis/roles/${rid}/rights`, {
             rids
         })
     },
     /**
      * delete 删除⻆角⾊色指定权限
-     * @param {*} roleId ⻆角⾊色 ID
+     * @param {*} rid ⻆角⾊色 ID
      * @param {*} rightId 权限 ID
      */
     delRoleAuthorization({
-        roleId,
+        rid,
         rightId
     }) {
-        return service.delete(`/apis/roles/${roleId}/rights/${rightId}`)
+        return service.delete(`/apis/roles/${rid}/rights/${rightId}`)
     },
     //商品分类
     /**
