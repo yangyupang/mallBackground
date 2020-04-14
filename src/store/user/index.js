@@ -9,7 +9,8 @@ export default {
     state: {
         users: [],
         total: 0,
-        rolesList: []
+        rolesList: [],
+        userMessage: {}
     },
     mutations: {
         getUsers(state, data) {
@@ -21,6 +22,9 @@ export default {
         getRolesList(state, data) {
             state.rolesList = data
         },
+        getUserMessage(state, data) {
+            state.userMessage = data
+        }
     },
     actions: {
         // 获取用户列表
@@ -145,6 +149,18 @@ export default {
                 let res = await api.alterUserType({ uId, type })
                 if (res.meta.status === 200) {
                     Message.success(res.meta.msg)
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        //获取用户信息
+        async getUserInfo({ commit }, uId) {
+            try {
+                let res = await api.getUserInfo(uId)
+                if (res.meta.status === 200) {
+                    console.log(res.data);
+                    commit("getUserMessage", res.data)
                 }
             } catch (err) {
                 console.log(err);

@@ -5,6 +5,8 @@ import login from './login'
 import user from './user'
 import reports from './reports'
 import rights from './rights'
+import goods from './goods'
+import order from './order'
 
 Vue.use(Vuex)
 
@@ -18,6 +20,8 @@ export default new Vuex.Store({
         login,
         user,
         reports,
-        rights
+        rights,
+        goods,
+        order
     }
 })

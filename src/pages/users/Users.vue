@@ -4,7 +4,7 @@
       <el-card class="box-card">
         <div class="top flex a-center">
           <div class="search">
-            <el-input placeholder="请输入内容" v-model="search" clearable  class="input-with-select">
+            <el-input placeholder="请输入内容" v-model="search" clearable class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="searchUsers"></el-button>
             </el-input>
           </div>
@@ -13,7 +13,12 @@
           </div>
         </div>
         <div class="dialog">
-          <el-dialog title="添加用户" :visible.sync="dialogFormVisible" width="600px">
+          <el-dialog
+            title="添加用户"
+            :visible.sync="dialogFormVisible"
+            :show-close="false"
+            width="600px"
+          >
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
               <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
                 <el-input v-model="ruleForm.username" clearable autocomplete="off"></el-input>
@@ -29,7 +34,7 @@
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button @click="cancelAddUser('ruleForm')">取 消</el-button>
               <el-button type="primary" @click="add">确 定</el-button>
             </div>
           </el-dialog>
@@ -84,16 +89,16 @@
           </el-table-column>
         </el-table>
         <div class="editDialog">
-          <el-dialog title="编辑用户" :visible.sync="editDialog" width="600px">
-            <el-form :model="editUsers" :rules="rules" ref="ruleForm">
+          <el-dialog title="编辑用户" :visible.sync="editDialog" :show-close="false" width="600px">
+            <el-form :model="userMessage" :rules="rules" ref="editForm">
               <el-form-item label="用户名" :label-width="formLabelWidth">
-                <el-input v-model="editUsers.username" disabled autocomplete="off"></el-input>
+                <el-input v-model="userMessage.username" disabled autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-                <el-input v-model="editUsers.email" autocomplete="off"></el-input>
+                <el-input v-model="userMessage.email" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="电话" :label-width="formLabelWidth" prop="mobile">
-                <el-input v-model="editUsers.mobile" autocomplete="off"></el-input>
+                <el-input v-model="userMessage.mobile" autocomplete="off"></el-input>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -103,7 +108,7 @@
           </el-dialog>
         </div>
         <div class="roleDialog">
-          <el-dialog title="分配用户" :visible.sync="roleDialog" width="600px">
+          <el-dialog title="分配角色" :visible.sync="roleDialog" :show-close="false" width="600px">
             <div class="flex a-center role-box">当前用户:{{roleUsers.username}}</div>
             <div class="flex a-center role-box">当前角色:{{roleUsers.role_name}}</div>
             <el-select v-model="roles" placeholder="请选择">
@@ -125,8 +130,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="page"
-            :page-sizes="[5,15,20,30]"
-            :page-size="size"
+            :page-sizes="pageSizeOpts"
+            :page-size="100"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
           ></el-pagination>
@@ -164,7 +169,6 @@ export default {
       dialogFormVisible: false,
       editDialog: false,
       roleDialog: false,
-      editUsers: {},
       roleUsers: {},
       roles: "",
       ruleForm: {
@@ -208,7 +212,8 @@ export default {
       "delUser",
       "getRoleList",
       "assignRoles",
-      "alterUserType"
+      "alterUserType",
+      "getUserInfo"
     ]),
     // 每页条数切换的配置
     handleSizeChange(val) {
@@ -245,15 +250,17 @@ export default {
     },
     //打开编辑用户
     showEdit(row) {
-      this.editUsers = row;
+      this.getUserInfo(row.id);
+      // console.log(this.userMessage);
+      // this.editUsers = this.userMessage;
       this.editDialog = true;
     },
     //实现编辑
     edit() {
       this.editUser({
-        uId: this.editUsers.id,
-        email: this.editUsers.email.trim(),
-        mobile: this.editUsers.mobile.trim()
+        uId: this.userMessage.id,
+        email: this.userMessage.email.trim(),
+        mobile: this.userMessage.mobile.trim()
       });
       this.editDialog = false;
       setTimeout(() => {
@@ -324,8 +331,16 @@ export default {
       // console.log(row);
     },
     //搜索
-    searchUsers(){
-      this.getUserList({ query: this.search.trim(), pagenum: 1, pagesize: this.size});
+    searchUsers() {
+      this.getUserList({
+        query: this.search.trim(),
+        pagenum: 1,
+        pagesize: this.size
+      });
+    },
+    cancelAddUser(formname) {
+      this.dialogFormVisible = false;
+      this.$refs[formname].resetFields();
     }
   },
   beforeMount() {
@@ -334,7 +349,20 @@ export default {
   mounted() {},
   watch: {},
   computed: {
-    ...userState(["users", "total", "rolesList"])
+    ...userState(["users", "total", "rolesList", "userMessage"]),
+    pageSizeOpts() {
+      let a = [];
+      let b = 50;
+      if (this.total < 50) {
+        b = this.total;
+      }
+      let i = 1;
+      do {
+        a.push( 5* i);
+        i++;
+      } while (i * 5<= b);
+      return a;
+    }
   }
 };
 </script>

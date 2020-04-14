@@ -5,7 +5,13 @@
         <el-button type="primary" @click="openAdd">添加角色</el-button>
       </div>
       <div class="addDialog">
-        <el-dialog title="添加角色" :visible.sync="addDialog" margin-top="15vh" width="30%">
+        <el-dialog
+          title="添加角色"
+          :visible.sync="addDialog"
+          :show-close="false"
+          margin-top="15vh"
+          width="30%"
+        >
           <div>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
               <el-form-item label="角色名" prop="roleName">
@@ -17,7 +23,7 @@
             </el-form>
           </div>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="addDialog = false">取 消</el-button>
+            <el-button @click="cancelAdd('ruleForm')">取 消</el-button>
             <el-button type="primary" @click="addRoles">确 定</el-button>
           </div>
         </el-dialog>
@@ -77,14 +83,20 @@
         </el-table-column>
       </el-table>
       <div class="editDialog">
-        <el-dialog title="添加编译" :visible.sync="editDialog" margin-top="15vh" width="30%">
+        <el-dialog
+          title="添加编译"
+          :visible.sync="editDialog"
+          margin-top="15vh"
+          width="30%"
+          :show-close="false"
+        >
           <div>
-            <el-form :model="editRoleInfo" :rules="rules" ref="editForm">
+            <el-form :model="userMessage" :rules="rules" ref="editForm">
               <el-form-item label="角色名" prop="roleName">
-                <el-input v-model="editRoleInfo.roleName" clearable autocomplete="off"></el-input>
+                <el-input v-model="userMessage.roleName" clearable autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="角色描述">
-                <el-input v-model="editRoleInfo.roleDesc" clearable autocomplete="off"></el-input>
+                <el-input v-model="userMessage.roleDesc" clearable autocomplete="off"></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -95,7 +107,13 @@
         </el-dialog>
       </div>
       <div class="allotDialog">
-        <el-dialog title="权限分配" :visible.sync="allotDialog" margin-top="15vh" width="50%">
+        <el-dialog
+          title="权限分配"
+          :visible.sync="allotDialog"
+          :show-close="false"
+          margin-top="15vh"
+          width="50%"
+        >
           <el-tree
             :data="rightsList"
             :default-checked-keys="defCheck"
@@ -133,7 +151,6 @@ export default {
       allotDialog: false,
       allotUser: "",
       isRepeat: -1,
-      editRoleInfo: {},
       ruleForm: {
         roleName: "",
         roleDesc: ""
@@ -163,7 +180,8 @@ export default {
       "delRole",
       "getRightsList",
       "roleAuthorization",
-      "delRoleAuthorization"
+      "delRoleAuthorization",
+      "getRole"
     ]),
     openAdd() {
       this.addDialog = true;
@@ -184,17 +202,16 @@ export default {
       });
     },
     showEdit(row) {
-      // console.log(row);
-      this.editRoleInfo = row;
+      this.getRole(row.id);
       this.editDialog = true;
     },
     editRoles() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.editRole({
-            rid: this.editRoleInfo.id,
-            roleName: this.editRoleInfo.roleName.trim(),
-            roleDesc: this.editRoleInfo.roleDesc.trim()
+            rid: this.userMessage.roleId,
+            roleName: this.userMessage.roleName.trim(),
+            roleDesc: this.userMessage.roleDesc.trim()
           });
           this.editDialog = false;
           setTimeout(() => {
@@ -278,18 +295,33 @@ export default {
     },
     unfold(row) {
       this.allotUser = row.id;
-      // console.log("1");
-      // console.log(row.id);
     },
     closeTag(tag) {
-      this.delRoleAuthorization({
-        rid: this.allotUser,
-        rightId: tag.id
-      });
-      setTimeout(() => {
-        this.getRoleList();
-      }, 200);
-      // console.log(tag.id);
+      this.$confirm("此操作将永久删除该权限, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.delRoleAuthorization({
+            rid: this.allotUser,
+            rightId: tag.id
+          });
+          setTimeout(() => {
+            this.getRoleList();
+          }, 200);
+          // console.log(tag.id);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    cancelAdd(formname) {
+      this.addDialog = false;
+      this.$refs[formname].resetFields();
     }
   },
   beforeMount() {},
@@ -299,7 +331,7 @@ export default {
   },
   watch: {},
   computed: {
-    ...rightsState(["roles", "rightsList"])
+    ...rightsState(["roles", "rightsList", "userMessage"])
   },
   filters: {}
 };

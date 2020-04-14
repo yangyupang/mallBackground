@@ -10,7 +10,8 @@ export default {
     namespaced: true,
     state: {
         roles: [],
-        rightsList: []
+        rightsList: [],
+        userMessage: {}
     },
     mutations: {
         setRoles(state, data) {
@@ -18,6 +19,9 @@ export default {
         },
         setRightsList(state, data) {
             state.rightsList = data
+        },
+        getUserMessage(state, data) {
+            state.userMessage = data
         }
     },
     actions: {
@@ -98,10 +102,25 @@ export default {
                 rightId
             })
             if (res.meta.status === 200) {
-                Message.success(res.meta.msg)
+                // Message.success(res.meta.msg)
+                Message.success("删除权限成功")
+                    // console.log(res.data);
             }
         },
-
+        //获取用户信息
+        async getRole({
+            commit
+        }, uId) {
+            try {
+                let res = await api.getRole(uId)
+                if (res.meta.status === 200) {
+                    // console.log(res.data);
+                    commit("getUserMessage", res.data)
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
     },
     getters: {

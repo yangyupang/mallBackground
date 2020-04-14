@@ -190,27 +190,18 @@ export default {
      * @param {*} pagenum 当前⻚页码值
      * @param {*} pagesize 每⻚页显示多少条数据
      */
-    getCategoriesList({
-        type,
-        pagenum = 1,
-        pagesize = 5
-    }) {
-        return service.get(`/apis/categories?type=${type}&pagenum=${pagenum}&pagesize=${pagesize}`)
+    getCategories(type, pagenum, pagesize) {
+        if (pagenum && pagesize) {
+            return service.get(`/apis/categories?type=${type}&pagenum=${pagenum}&pagesize=${pagesize}`)
+        }
+        return service.get(`/apis/categories?type=${type}`)
     },
     //添加分类
     // cat_pid	分类父 ID	不能为空，如果要添加1级分类，则父分类Id应该设置为 0
     // cat_name	分类名称	不能为空
     // cat_level	分类层级	不能为空，0表示一级分类；1表示二级分类；2表示三级分类
-    addCategories({
-        cat_pid,
-        cat_name,
-        cat_level
-    }) {
-        return service.post(`/apis/categories`, {
-            cat_pid,
-            cat_name,
-            cat_level
-        })
+    addCategory(params) {
+        return service.post(`/apis/categories `, params)
     },
     // 根据 id 查询分类
     getCategoriesById(id) {
@@ -221,10 +212,10 @@ export default {
      * @param {*} id 分类 ID
      * @param {*} cat_name 分类名称
      */
-    editCategories({ id, cat_name }) {
+    editCategory(id, cat_name) {
         return service.put(`/apis/categories/${id}`, {
             cat_name
-        });
+        })
     },
     /**
      * delete 删除分类
@@ -312,10 +303,11 @@ export default {
      * @param {*} pagesize 每⻚页显示条数
      * @param {*} query 查询参数 可选
      */
-    getGoods(pagenum = 1, pagesize = 5, query) {
-        return service.get(
-            `/apis/goods?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`
-        );
+    getGoods(query, pagenum = 1, pagesize = 10) {
+        if (query) {
+            return service.get(`/apis/goods?query=${query}&pagenum=${pagenum}&pagesize=${pagesize}`)
+        }
+        return service.get(`/apis/goods?pagenum=${pagenum}&pagesize=${pagesize}`)
     },
     /**
     * post 添加商品
@@ -329,37 +321,19 @@ export default {
     * @param {*} attrs 商品的参数（数组），包含 动态参数 和 静态属性
     可选
     */
-    addGoods({
-        goods_name,
-        goods_cat,
-        goods_price,
-        goods_number,
-        goods_weight,
-        goods_introduce,
-        pics,
-        attrs
-    }) {
-        return service.post(`/apis/goods`, {
-            goods_name,
-            goods_cat,
-            goods_price,
-            goods_number,
-            goods_weight,
-            goods_introduce,
-            pics,
-            attrs
-        });
+    addGoods(params) {
+        return service.post(`/apis/goods`, params)
     },
     /**
      * get 根据 ID 查询商品
-     * @param {*} gid 商品 ID
+     * @param {*} id 商品 ID
      */
-    findGood(gid) {
-        return service.get(`/apis/goods/${gid}`);
+    findGoods(id) {
+        return service.get(`/apis/goods/${id}`);
     },
     /**
      * put 编辑提交商品(只做效果,不不提交接⼝口)
-     * @param {*} gid 商品 ID
+     * @param {*} id 商品 ID
      * @param {*} goods_name 商品名称
      * @param {*} goods_price 价格
      * @param {*} goods_number 数量量
@@ -368,43 +342,26 @@ export default {
      * @param {*} pics 上传的图⽚片临时路路径（对象） 可选
      * @param {*} attrs 商品的参数（数组） 可选
      */
-    editGood({
-        gid,
-        goods_name,
-        goods_price,
-        goods_number,
-        goods_weight,
-        goods_introduce,
-        pics,
-        attrs
-    }) {
-        return service.put(`/apis/goods/${gid}`, {
-            goods_name,
-            goods_price,
-            goods_number,
-            goods_weight,
-            goods_introduce,
-            pics,
-            attrs
-        });
+    editGoods(id, params) {
+        return service.put(`/apis/goods/${id}`, params)
     },
     /**
      * delete 删除商品
      * @param {*} gid 商品 ID
      */
-    delGood(gid) {
-        return service.delete(`/apis/goods/${gid}`);
+    delGoods(id) {
+        return service.delete(`/apis/goods/${id}`);
     },
     /**
      * put 同步商品图⽚片
-     * @param {*} gid 商品 ID
+     * @param {*} id 商品 ID
      * @param {*} pics 商品图⽚片集合
      */
     syncGoodPic({
-        gid,
+        id,
         pics
     }) {
-        return service.put(`/apis/goods/${gid}/pics`, {
+        return service.put(`/apis/goods/${id}/pics`, {
             pics
         });
     },
@@ -441,8 +398,11 @@ export default {
      * @param {*} order_fapiao_content	发票内容	可以为空
      * @param {*} consignee_addr	发货地址	可以为空
      */
-    getOrders(query, agenum = 1, pagesize = 5, user_id, pay_status, is_send, order_fapiao_title, order_fapiao_company, order_fapiao_content, consignee_addr) {
-        return service.get(`/apis/orders?agenum=${agenum}&pagesize=${pagesize}&query=${query}&user_id=${user_id}&pay_status=${pay_status}&is_send=${is_send}&order_fapiao_title=${order_fapiao_title}&order_fapiao_company=${order_fapiao_company}&order_fapiao_content=${order_fapiao_content}&consignee_addr=${consignee_addr}`);
+    getOrders(query, pagenum, pagesize, user_id, pay_status, is_send, order_fapiao_title, order_fapiao_company, order_fapiao_content, consignee_addr) {
+        if (query) {
+            return service.get(`/apis/orders?pagenum=${pagenum}&pagesize=${pagesize}&query=${query}`)
+        }
+        return service.get(`/apis/orders?pagenum=${pagenum}&pagesize=${pagesize}`)
     },
     /**
      * put 修改订单状态
@@ -481,8 +441,8 @@ export default {
      * @param {*} oid id
      * 供测试的物流单号：1106975712662 或者 804909574412544600
      */
-    findExpress(oid) {
-        return service.get(`/apis/kuaidi/${oid}`);
+    findExpress(id) {
+        return service.get(`/apis/kuaidi/${804909574412544600}`)
     },
     //数据统计
     /**

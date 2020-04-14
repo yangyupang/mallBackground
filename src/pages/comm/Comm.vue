@@ -80,7 +80,12 @@ export default {
         { id: null, url: "", icon: "el-icon-folder-add" },
         { id: null, url: "", icon: "el-icon-message" },
         { id: null, url: "", icon: "el-icon-position" },
-        { id: null, url: "", icon: "el-icon-odometer" }
+        { id: null, url: "", icon: "el-icon-odometer" },
+        {
+          id: 1,
+          url: "/goods/addGoods",
+          authName: "添加商品"
+        }
       ],
       active: "0"
     };
@@ -137,7 +142,7 @@ export default {
       localStorage.removeItem("adminToken");
       localStorage.removeItem("activeList");
       this.$router.push("/login");
-      this.$message.success("退出成功")
+      this.$message.success("退出成功");
     },
     getIcon(id) {
       let item = this.navList.find(item => item.id === id);

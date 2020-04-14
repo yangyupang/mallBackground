@@ -43,7 +43,7 @@ const routes = [{
             },
             {
                 path: '/rights/rights',
-                name: 'roles',
+                name: 'rights',
                 meta: {
                     title: '权限列表'
                 },
@@ -76,6 +76,15 @@ const routes = [{
                 },
                 component: () =>
                     import ('../pages/goods/Categories.vue')
+            },
+            {
+                path: '/goods/addGoods',
+                name: "addGoods",
+                component: () =>
+                    import ('../pages/goods/AddGoods.vue'),
+                meta: {
+                    title: '添加商品'
+                }
             },
             {
                 path: '/orders/orders',
