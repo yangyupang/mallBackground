@@ -41,6 +41,7 @@
                         :disabled="!(num>0&&valid>0)"
                         v-model="information.goods_price"
                         type="number"
+                        min="1"
                       ></el-input>
                     </el-form-item>
                     <el-form-item label="商品数量" :label-width="formLabelWidth" prop="goods_number">
@@ -48,6 +49,7 @@
                         :disabled="!(num>1&&valid>1)"
                         v-model="information.goods_number"
                         type="number"
+                        min="1"
                       ></el-input>
                     </el-form-item>
                     <el-form-item label="商品重量" :label-width="formLabelWidth" prop="goods_weight">
@@ -55,6 +57,7 @@
                         :disabled="!(num>2&&valid>2)"
                         v-model="information.goods_weight"
                         type="number"
+                        min="1"
                       ></el-input>
                     </el-form-item>
                     <el-form-item label="商品分类" :label-width="formLabelWidth" required>
@@ -69,20 +72,43 @@
                     </el-form-item>
 
                     <el-form-item label :label-width="formLabelWidth" v-show="num>4&&valid>4">
-                      <el-button size="small" type="success" @click="next">下一步</el-button>
+                      <el-button size="small" type="success" @click="next(num)">下一步</el-button>
                     </el-form-item>
                   </el-form>
                 </div>
               </el-tab-pane>
               <el-tab-pane label="商品参数" :disabled="flageInx<=1">
                 <div class="tabs-content">
-                  <el-button size="small" type="success" @click="next">下一步</el-button>
+                  <div v-if="attributes.length === 0">暂无参数</div>
+                  <div class="content" else v-for="(item,index) in attributes" :key="index">
+                    <div style="margin: 20px;">{{item.attr_name}}</div>
+                    <div style="margin-left: 20px;">
+                      <el-tag
+                        style="margin-right: 10px;"
+                        v-for="(item1,index1) in item.attr_vals.split(' ')"
+                        :key="index1"
+                        v-if="item1 !== ''"
+                      >{{item1}}</el-tag>
+                    </div>
+                  </div>
+                  <el-button
+                    size="small"
+                    style="margin-top:20px"
+                    type="success"
+                    @click="next(flageInx)"
+                  >下一步</el-button>
                 </div>
               </el-tab-pane>
               <el-tab-pane label="商品属性" :disabled="flageInx<=2">
                 <div class="tabs-content">
-                  <div style="margin-bottom:20px">暂无属性</div>
-                  <el-button size="small" type="success" @click="next">下一步</el-button>
+                  <div style="margin-bottom:20px" v-if="attributes.length === 0">暂无属性</div>
+                  <div class="content" else v-for="(item,index) in attributes" :key="index">
+                    <div style="margin: 20px;">{{item.attr_name}}</div>
+                    <div style="margin-left: 20px;">
+                      <el-input v-model="item.attr_vals" placeholder></el-input>
+                    </div>
+                  </div>
+                  <el-button size="small" style="margin-top:20px" type="success" @click="next">下一步</el-button>
                 </div>
               </el-tab-pane>
               <el-tab-pane label="商品图片" :disabled="flageInx<=3">
@@ -131,6 +157,13 @@ const goodModule = createNamespacedHelpers("goods");
 const { mapActions: goodAtions, mapState: goodState } = goodModule;
 export default {
   data() {
+    var checkNum = (rule, value, callback) => {
+      if (value < 1) {
+        callback(new Error("请输入大于零的数"));
+      } else {
+        callback();
+      }
+    };
     return {
       active: 0,
       flageInx: 1,
@@ -159,13 +192,16 @@ export default {
           { required: true, message: "商品名名称不能为空", trigger: "change" }
         ],
         goods_price: [
-          { required: true, message: "商品价格不能为空", trigger: "change" }
+          { required: true, message: "商品价格不能为空", trigger: "change" },
+          { validator: checkNum, trigger: "blur" }
         ],
         goods_number: [
-          { required: true, message: "商品数量不能为空", trigger: "change" }
+          { required: true, message: "商品数量不能为空", trigger: "change" },
+          { validator: checkNum, trigger: "blur" }
         ],
         goods_weight: [
-          { required: true, message: "商品重量不能为空", trigger: "change" }
+          { required: true, message: "商品重量不能为空", trigger: "change" },
+          { validator: checkNum, trigger: "blur" }
         ],
         goods_cat: [
           { required: true, message: "请选择商品类型", trigger: "blur" }
@@ -176,13 +212,21 @@ export default {
   components: {},
   props: {},
   methods: {
-    ...goodAtions(["getCategories", "addGoods"]),
-    next() {
+    ...goodAtions(["getCategories", "addGoods", "getAttributes"]),
+    next(num) {
       this.flageInx++;
       this.active = String(this.flageInx - 1);
+      if (num === 5) {
+        this.getAttributes({ id: this.information.goods_cat[2], sel: "many" });
+      } else if (num === 2) {
+        this.getAttributes({ id: this.information.goods_cat[2], sel: "only" });
+      }
+      // console.log(num);
+      // console.log(this.information.goods_cat);
     },
     // 验证部分信息
     validate(prop, flage, msg) {
+      // console.log(flage);
       if (!flage) {
         this.valid = this.num - 1;
         this.flageInx = 1;
@@ -213,12 +257,18 @@ export default {
     // tab切换
     tabClick(e) {
       this.active = e.index;
+      // console.log(e.index);
+      if (e.index === '1') {
+        this.getAttributes({ id: this.information.goods_cat[2], sel: "many" });
+      } else if (e.index === '2') {
+        this.getAttributes({ id: this.information.goods_cat[2], sel: "only" });
+      }
       // this.flageInx = Number(e.index) + 1;
     },
     // 上传文件前
     successUpload(res, file, fileList) {
       if (res.meta.status === 200) {
-        Message.success(res.meta.msg)
+        Message.success(res.meta.msg);
         let a = { pic: `/tmp_uploads/${file.name}` };
         this.information.pics.push(a);
       }
@@ -245,7 +295,7 @@ export default {
     }
   },
   computed: {
-    ...goodState(["categories"])
+    ...goodState(["categories", "attributes"])
   }
 };
 </script>

@@ -254,7 +254,9 @@ export default {
             }
         },
         //删除参数
-        async delAttributes({ commit }, {
+        async delAttributes({
+            commit
+        }, {
             id,
             attrid
         }) {
@@ -276,7 +278,9 @@ export default {
             }
         },
         //编辑提交参数
-        async editAttributes({ commit }, {
+        async editAttributes({
+            commit
+        }, {
             id,
             attrid,
             attr_name,

@@ -157,9 +157,6 @@ export default {
       let item = this.navList.find(item => item.id == val);
       this.$router.push(`${item.url}`);
     },
-    // handleOpen(key, keyPath) {
-    //   this.active = key;
-    // },
     handleSelect(key, keyPath) {
       let id = Number(key);
       let item = this.navList.find(item => item.id === id);
@@ -223,7 +220,13 @@ export default {
   mounted() {
     this.getMenuList();
   },
-  watch: {},
+  watch: {
+    "$route.path": function(val) {
+      if (val === "/goods/addGoods") {
+        this.active = "104";
+      }
+    }
+  },
   computed: {
     ...homeState(["menus", "weather"])
   }
